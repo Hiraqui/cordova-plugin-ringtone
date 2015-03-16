@@ -50,27 +50,27 @@ Example 1
 //Seting a sound file from the "www" folder as ringtone
 
 window.ringtone.setRingtone("/android_asset/www/img/beep.wav",
-							"beep",
-							"ringtone",
-							function(success) {
-								alert(success);
-							},
-							function(err) {
-								alert(err);
-							})
-							
+			    "beep",
+			    "ringtone",
+			    function(success) {
+			    alert(success);
+			    },
+			    function(err) {
+			    alert(err);
+			    })
+			    
 Example 2
 ---------
 
 //Seting a sound file from the SD card as notification tone
 
 window.ringtone.setRingtone("file:///storage/sdcard/Android/data/com.hiraqui.myApplication/files/beep.mp3",
-							"beep",
-							"notification",
-							function(success) {
-								alert(success);
-							},
-							function(err) {
-								alert(err);
-							})
+			    "beep",
+			    "notification",
+			    function(success) {
+			    alert(success);
+			    },
+			    function(err) {
+			    alert(err);
+			    })
 
