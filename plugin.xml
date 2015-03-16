@@ -2,10 +2,12 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="com.hiraqui.ringtone"
-      version="0.3.4">
+      version="0.1.0">
     <name>Ringtone</name>
     <description>Ringtone Plugin</description>
+    <author>Hiraqui</author>
     <keywords>cordova,ringtone,android,phonegap</keywords>
+    <license>GNU GENERAL PUBLIC LICENSE Version 3</license>
 
  <js-module src="www/ringtone.js" name="ringtone">
 <clobbers target="ringtone" />
