@@ -1,9 +1,9 @@
-# cordova-plugin-ringtone
+# com.hiraqui.ringtone
 
 Ringtone
 ======
 
-A Cordova / Phonegap ringtone plugin for Android
+A Cordova / Phonegap ringtone plugin for Android. Set an audio file as ringtone, notification tone or alarm tone.
 
 	cordova plugin add https://github.com/Hiraqui/cordova-plugin-ringtone
 	
