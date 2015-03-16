@@ -7,6 +7,8 @@
     <description>Ringtone Plugin</description>
     <author>Hiraqui</author>
     <keywords>cordova,ringtone,android,phonegap</keywords>
+    <repo>https://github.com/Hiraqui/cordova-plugin-ringtone.git</repo>
+    <issue>https://github.com/Hiraqui/cordova-plugin-ringtone/issues</issue>
     <license>GNU GENERAL PUBLIC LICENSE Version 3</license>
 
  <js-module src="www/ringtone.js" name="ringtone">
