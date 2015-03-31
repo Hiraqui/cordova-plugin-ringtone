@@ -1,6 +1,10 @@
 package com.hiraqui.ringtone;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -8,8 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.content.ContentValues;
+import android.content.res.AssetManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -26,6 +32,9 @@ public class Ringtone extends CordovaPlugin {
 		if (action.equals("echo")) {
 			return this.echo(args.getString(0), args.getString(1),
 					args.getString(2), callbackContext);
+		} else if (action.equals("copy")) {
+			return this.copy(args.getString(0), args.getString(1),
+					args.getString(2), callbackContext);
 		}
 		return false;
 	}
@@ -36,7 +45,7 @@ public class Ringtone extends CordovaPlugin {
 			public void run() {
 				if (tipo.equals("alarm") || tipo.equals("notification")
 						|| tipo.equals("ringtone")) {
-					CopyAssets(tipo, file, title, callbackContext);
+					setAssets(tipo, file, title, callbackContext);
 				} else {
 					callbackContext.error("tipo " + tipo + "not valid");
 				}
@@ -45,7 +54,83 @@ public class Ringtone extends CordovaPlugin {
 		return true;
 	}
 
-	private void CopyAssets(String type, String file, String title,
+	private boolean copy(final String file, final String title,
+			final String tipo, final CallbackContext callbackContext) {
+		cordova.getThreadPool().execute(new Runnable() {
+			public void run() {
+				if (file.contains("/android_asset/")) {
+					String tmpFile = file.replaceFirst("/android_asset/", "");
+					if (tipo.equals("alarm") || tipo.equals("notification")
+							|| tipo.equals("ringtone")) {
+						copyAssets(tipo, tmpFile, title, callbackContext);
+					} else {
+						callbackContext.error("tipo " + tipo + "not valid");
+					}
+				} else
+					callbackContext
+							.error("the file must be in the \"www\" folder or subfolder and the path should start with \"/android_asset/www\"");
+			}
+		});
+		return true;
+	}
+
+	private void copyAssets(String type, String file, String title,
+			CallbackContext callbackContext) {
+		AssetManager assetManager = cordova.getActivity().getAssets();
+		File newSoundFile = null;
+		String[] arrayName = file.split("/");
+		if (Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED)
+				&& Environment.getExternalStorageDirectory().canWrite()) {
+			File wallpaperDirectory = new File(Environment
+					.getExternalStorageDirectory().toString() + "/Ringtones/");
+			wallpaperDirectory.mkdirs();
+			newSoundFile = new File(Environment.getExternalStorageDirectory()
+					.toString()
+					+ "/Ringtones/"
+					+ arrayName[arrayName.length - 1]);
+		} else {
+			File wallpaperDirectory = new File(Environment.getDataDirectory()
+					.toString()
+					+ "/data/"
+					+ cordova.getActivity().getApplicationInfo().packageName
+					+ "/ringtones/");
+			wallpaperDirectory.mkdirs();
+			newSoundFile = new File(Environment.getDataDirectory().toString()
+					+ "/data/"
+					+ cordova.getActivity().getApplicationInfo().packageName
+					+ "/ringtones/" + arrayName[arrayName.length - 1]);
+		}
+		InputStream in = null;
+		OutputStream out = null;
+		try {
+			in = assetManager.open(file);
+			out = new FileOutputStream(newSoundFile);
+			copyFile(in, out);
+			in.close();
+			in = null;
+			out.flush();
+			out.close();
+			out = null;
+			setRingtone(type, newSoundFile, callbackContext, title);
+			callbackContext.success("success, new file is "
+					+ newSoundFile.getPath());
+		} catch (Exception e) {
+			Log.e("tag", e.getMessage());
+			callbackContext.error("Error copiando: " + e.getMessage()
+					+ ". Destino: " + newSoundFile.getPath());
+		}
+	}
+
+	private void copyFile(InputStream in, OutputStream out) throws IOException {
+		byte[] buffer = new byte[1024];
+		int read;
+		while ((read = in.read(buffer)) != -1) {
+			out.write(buffer, 0, read);
+		}
+	}
+
+	private void setAssets(String type, String file, String title,
 			CallbackContext callbackContext) {
 		File soundFile = new File(file.replaceAll("file:", ""));
 		setRingtone(type, soundFile, callbackContext, title);
@@ -81,23 +166,27 @@ public class Ringtone extends CordovaPlugin {
 				RingtoneManager.setActualDefaultRingtoneUri(
 						cordova.getActivity(), RingtoneManager.TYPE_ALARM,
 						newUri);
-				callbackContext.success("success");
+				callbackContext.success("success setting "
+						+ newSoundFile.getAbsolutePath() + " as " + type);
 			} else if (type.equals("notification")) {
 				RingtoneManager.setActualDefaultRingtoneUri(
 						cordova.getActivity(),
 						RingtoneManager.TYPE_NOTIFICATION, newUri);
-				callbackContext.success("success");
+				callbackContext.success("success setting "
+						+ newSoundFile.getAbsolutePath() + " as " + type);
 			} else if (type.equals("ringtone")) {
 				RingtoneManager.setActualDefaultRingtoneUri(
 						cordova.getActivity(), RingtoneManager.TYPE_RINGTONE,
 						newUri);
-				callbackContext.success("success");
+				callbackContext.success("success setting "
+						+ newSoundFile.getAbsolutePath() + " as " + type);
 			} else {
 				callbackContext.error("tipo " + type + "not valid");
 			}
 		} catch (Throwable t) {
 			Log.d("tag", "catch exception");
-			callbackContext.error(t.getMessage());
+			callbackContext.error("Error setting as " + type + t.getMessage()
+					+ ". Destino: " + newSoundFile.getPath());
 		}
 	}
 }

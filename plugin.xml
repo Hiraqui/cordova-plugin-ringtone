@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="com.hiraqui.ringtone"
-      version="0.1.0">
+      version="0.5.0">
     <name>Ringtone</name>
     <description>Ringtone Plugin</description>
     <author>Hiraqui</author>
@@ -25,6 +25,8 @@
 
         <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+            <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
 
         <source-file src="src/android/Ringtone.java" target-dir="src/com/hiraqui/ringtone" />
