@@ -15,6 +15,7 @@ Methods
 -------
 
 - window.ringtone.setRingtone
+- window.ringtone.exportAssetAndSetRingtone
 
 Instructions
 -------
