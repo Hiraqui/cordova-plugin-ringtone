@@ -9,7 +9,7 @@ A Cordova / Phonegap ringtone plugin for Android. Set an audio file as ringtone,
 	
 	or
 
-    cordova plugin add com.hiraqui.ringtone
+  	cordova plugin add com.hiraqui.ringtone
 
 Methods
 -------
@@ -34,7 +34,7 @@ Set a sound file as default Ringtone, notification tone or alarm tone
         successCallback The function to call when the heading data is available
     param {Function}
         errorCallback The function to call when there is an error getting the heading data. (OPTIONAL)
-    
+        
     window.ringtone.setRingtone(file, title, artist, type, successCallback, errorCallback)
 
 window.ringtone.exportAssetAndSetRingtone
@@ -56,7 +56,7 @@ Copy an asset sound file to the sdcard or app directory and set it as Ringtone, 
         successCallback The function to call when the heading data is available
     param {Function}
         errorCallback The function to call when there is an error getting the heading data. (OPTIONAL)
-    
+        
     window.ringtone.exportAssetAndSetRingtone(file, title, artist, type, successCallback, errorCallback)
 
 Supported Platforms
@@ -69,48 +69,42 @@ Example 1
 
 //Seting a sound file from the "www" folder as ringtone
 
-window.ringtone.setRingtone("/android_asset/www/img/beep.wav",
-			    "beep",
-			    null,
-			    "ringtone",
-			    function(success) {
-			    alert(success);
-			    },
-			    function(err) {
-			    alert(err);
-			    })
+    window.ringtone.setRingtone("/android_asset/www/sounds/beep.wav",
+        "Beep", null, "ringtone", 
+        function(success) {
+        	alert(success);
+        },
+        function(err) {
+        	alert(err);
+        })
 			    
 Example 2
 ---------
 
 //Seting a sound file from the SD card as notification tone
 
-window.ringtone.setRingtone("file:///storage/sdcard/Android/data/com.hiraqui.myApplication/files/beep.mp3",
-			    "beep",
-			    "Myself"
-			    "notification",
-			    function(success) {
-			    alert(success);
-			    },
-			    function(err) {
-			    alert(err);
-			    })
+    window.ringtone.setRingtone("file:///storage/sdcard/Android/data/com.hiraqui.myApplication/files/beep.mp3",
+        "Beep", "Myself", "notification", 
+        function(success) {
+        	alert(success);
+        },
+        function(err) {
+        	alert(err);
+        })
 
 Example 3
 ---------
 
 //Seting a sound file from the "www/sounds" folder as ringtone after copying it to another folder
 
-window.ringtone.exportAssetAndSetRingtone("/android_asset/www/sounds/beep.wav",
-			    "beep",
-			    "",
-			    "ringtone",
-			    function(success) {
-			    alert(success);
-			    },
-			    function(err) {
-			    alert(err);
-			    })
+    window.ringtone.exportAssetAndSetRingtone("/android_asset/www/sounds/beep.wav",
+        "Beep", "", "alarm", 
+        function(success) {
+        	alert(success);
+        },
+        function(err) {
+        	alert(err);
+        })
 
 Permissions
 -----------
