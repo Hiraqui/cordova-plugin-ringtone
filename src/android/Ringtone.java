@@ -19,8 +19,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.hiraqui.myApplication.R;
-
 /**
  * This class echoes a string called from JavaScript.
  */
@@ -31,21 +29,22 @@ public class Ringtone extends CordovaPlugin {
 			CallbackContext callbackContext) throws JSONException {
 		if (action.equals("echo")) {
 			return this.echo(args.getString(0), args.getString(1),
-					args.getString(2), callbackContext);
+					args.getString(2), args.getString(3), callbackContext);
 		} else if (action.equals("copy")) {
 			return this.copy(args.getString(0), args.getString(1),
-					args.getString(2), callbackContext);
+					args.getString(2), args.getString(3), callbackContext);
 		}
 		return false;
 	}
 
 	private boolean echo(final String file, final String title,
-			final String tipo, final CallbackContext callbackContext) {
+			final String artist, final String tipo,
+			final CallbackContext callbackContext) {
 		cordova.getThreadPool().execute(new Runnable() {
 			public void run() {
 				if (tipo.equals("alarm") || tipo.equals("notification")
 						|| tipo.equals("ringtone")) {
-					setAssets(tipo, file, title, callbackContext);
+					setAssets(tipo, file, title, artist, callbackContext);
 				} else {
 					callbackContext.error("tipo " + tipo + "not valid");
 				}
@@ -55,14 +54,16 @@ public class Ringtone extends CordovaPlugin {
 	}
 
 	private boolean copy(final String file, final String title,
-			final String tipo, final CallbackContext callbackContext) {
+			final String artist, final String tipo,
+			final CallbackContext callbackContext) {
 		cordova.getThreadPool().execute(new Runnable() {
 			public void run() {
 				if (file.contains("/android_asset/")) {
 					String tmpFile = file.replaceFirst("/android_asset/", "");
 					if (tipo.equals("alarm") || tipo.equals("notification")
 							|| tipo.equals("ringtone")) {
-						copyAssets(tipo, tmpFile, title, callbackContext);
+						copyAssets(tipo, tmpFile, title, artist,
+								callbackContext);
 					} else {
 						callbackContext.error("tipo " + tipo + "not valid");
 					}
@@ -75,7 +76,7 @@ public class Ringtone extends CordovaPlugin {
 	}
 
 	private void copyAssets(String type, String file, String title,
-			CallbackContext callbackContext) {
+			String artist, CallbackContext callbackContext) {
 		AssetManager assetManager = cordova.getActivity().getAssets();
 		File newSoundFile = null;
 		String[] arrayName = file.split("/");
@@ -112,7 +113,7 @@ public class Ringtone extends CordovaPlugin {
 			out.flush();
 			out.close();
 			out = null;
-			setRingtone(type, newSoundFile, callbackContext, title);
+			setRingtone(type, newSoundFile, callbackContext, title, artist);
 			callbackContext.success("success, new file is "
 					+ newSoundFile.getPath());
 		} catch (Exception e) {
@@ -131,13 +132,21 @@ public class Ringtone extends CordovaPlugin {
 	}
 
 	private void setAssets(String type, String file, String title,
-			CallbackContext callbackContext) {
+			String artist, CallbackContext callbackContext) {
 		File soundFile = new File(file.replaceAll("file:", ""));
-		setRingtone(type, soundFile, callbackContext, title);
+		setRingtone(type, soundFile, callbackContext, title, artist);
 	}
 
 	private void setRingtone(String type, File newSoundFile,
-			CallbackContext callbackContext, String title) {
+			CallbackContext callbackContext, String title, String artist) {
+		if (artist.equals("")) {
+			artist = cordova
+					.getActivity()
+					.getPackageManager()
+					.getApplicationLabel(
+							cordova.getActivity().getApplicationInfo())
+					.toString();
+		}
 		ContentValues values = new ContentValues();
 		values.put(MediaStore.MediaColumns.DATA, newSoundFile.getAbsolutePath());
 		values.put(MediaStore.MediaColumns.TITLE,
@@ -146,7 +155,8 @@ public class Ringtone extends CordovaPlugin {
 		values.put(MediaStore.MediaColumns.MIME_TYPE, "audio/"
 				+ filenameArray[filenameArray.length - 1]);
 		values.put(MediaStore.MediaColumns.SIZE, newSoundFile.length());
-		values.put(MediaStore.Audio.Media.ARTIST, R.string.app_name);
+		values.put(MediaStore.Audio.Media.ARTIST,
+				artist.replaceAll("[^\\\\dA-Za-z0-9_]", ""));
 		values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
 		values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
 		values.put(MediaStore.Audio.Media.IS_ALARM, true);

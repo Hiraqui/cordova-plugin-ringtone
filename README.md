@@ -1,4 +1,4 @@
-# com.hiraqui.ringtone v0.5.0
+# com.hiraqui.ringtone v0.6.0
 
 Ringtone
 ======
@@ -17,11 +17,6 @@ Methods
 - window.ringtone.setRingtone
 - window.ringtone.exportAssetAndSetRingtone
 
-Instructions
--------
-
-Change "import com.hiraqui.myApplication.R" to your own R resource file on Ringtone.java
-
 window.ringtone.setRingtone
 =================
 
@@ -32,13 +27,15 @@ Set a sound file as default Ringtone, notification tone or alarm tone
     param {String}
         title The title shown on the ringtone selection screen
     param {String}
+    	artist The artist for the file, set to null or "" to use the name of the Application as artist
+    param {String}
         type The type of sound you want to set ["ringtone"|"notification"|"alarm"]
     param {Function}
         successCallback The function to call when the heading data is available
     param {Function}
         errorCallback The function to call when there is an error getting the heading data. (OPTIONAL)
     
-    window.ringtone.setRingtone(file, title, type, successCallback, errorCallback)
+    window.ringtone.setRingtone(file, title, artist, type, successCallback, errorCallback)
 
 window.ringtone.exportAssetAndSetRingtone
 =================
@@ -52,13 +49,15 @@ Copy an asset sound file to the sdcard or app directory and set it as Ringtone, 
     param {String}
         title The title shown on the ringtone selection screen
     param {String}
+    	artist The artist for the exported file, set to null or "" to use the name of the Application as artist
+    param {String}
         type The type of sound you want to set ["ringtone"|"notification"|"alarm"]
     param {Function}
         successCallback The function to call when the heading data is available
     param {Function}
         errorCallback The function to call when there is an error getting the heading data. (OPTIONAL)
     
-    window.ringtone.exportAssetAndSetRingtone(file, title, type, successCallback, errorCallback)
+    window.ringtone.exportAssetAndSetRingtone(file, title, artist, type, successCallback, errorCallback)
 
 Supported Platforms
 -------------------
@@ -72,6 +71,7 @@ Example 1
 
 window.ringtone.setRingtone("/android_asset/www/img/beep.wav",
 			    "beep",
+			    null,
 			    "ringtone",
 			    function(success) {
 			    alert(success);
@@ -87,6 +87,7 @@ Example 2
 
 window.ringtone.setRingtone("file:///storage/sdcard/Android/data/com.hiraqui.myApplication/files/beep.mp3",
 			    "beep",
+			    "Myself"
 			    "notification",
 			    function(success) {
 			    alert(success);
@@ -102,6 +103,7 @@ Example 3
 
 window.ringtone.exportAssetAndSetRingtone("/android_asset/www/sounds/beep.wav",
 			    "beep",
+			    "",
 			    "ringtone",
 			    function(success) {
 			    alert(success);
@@ -114,5 +116,7 @@ Permissions
 -----------
 
 android.permission.WRITE_SETTINGS
+
 android.permission.READ_EXTERNAL_STORAGE
+
 android.permission.WRITE_EXTERNAL_STORAGE

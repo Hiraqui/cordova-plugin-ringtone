@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="com.hiraqui.ringtone"
-      version="0.5.0">
+      version="0.6.0">
     <name>Ringtone</name>
     <description>Ringtone Plugin</description>
     <author>Hiraqui</author>
