@@ -1,4 +1,4 @@
-# com.hiraqui.ringtone v0.6.0
+# com.hiraqui.ringtone v0.6.1
 
 Ringtone
 ======

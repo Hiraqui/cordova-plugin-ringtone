@@ -2,11 +2,11 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="com.hiraqui.ringtone"
-      version="0.6.0">
+      version="0.6.1">
     <name>Ringtone</name>
     <description>Ringtone Plugin</description>
     <author>Hiraqui</author>
-    <keywords>cordova,ringtone,android,phonegap</keywords>
+    <keywords>ecosystem:cordova,cordova-android,cordova,ringtone,android,phonegap</keywords>
     <repo>https://github.com/Hiraqui/cordova-plugin-ringtone.git</repo>
     <issue>https://github.com/Hiraqui/cordova-plugin-ringtone/issues</issue>
     <license>GNU GENERAL PUBLIC LICENSE Version 3</license>
