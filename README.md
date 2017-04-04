@@ -114,3 +114,9 @@ android.permission.WRITE_SETTINGS
 android.permission.READ_EXTERNAL_STORAGE
 
 android.permission.WRITE_EXTERNAL_STORAGE
+
+NOTE: Using sdk 23 or Android 6.0 global permission WRITE_SETTINGS is not allowed.
+There are two solutions:
++ Restrict sdk to 22 or lower
++ Use https://github.com/dpa99c/cordova-diagnostic-plugin to prompt app permission before using this plugin
+
